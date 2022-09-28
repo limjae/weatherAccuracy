@@ -57,4 +57,4 @@ jobs:
         aws s3 cp \
         --region ap-northeast-2 \
         --acl private \ 
-        ./project-weather.zip s3://weather-cicd-bucket/
+        s3://weather-cicd-bucket/project-weather.zip ./project-weather.zip
