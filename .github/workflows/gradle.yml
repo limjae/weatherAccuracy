@@ -78,9 +78,9 @@ jobs:
         id: deploy-prod
         if: contains(github.ref, 'master')
         with:
-          host: ${{ secrets.HOST_PROD }}
+          host: ${{ secrets.AWS_HOST }}
           username: ec2-user
-          key: ${{ secrets.PRIVATE_KEY }}
+          key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           envs: GITHUB_SHA
           script: |
             sudo docker rm -f $(docker ps -qa)
