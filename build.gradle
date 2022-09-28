@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.limjae'
-version = '0.0.1-SNAPSHOT'
+version = 'app'
 sourceCompatibility = '17'
 
 configurations {
