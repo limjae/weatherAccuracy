@@ -65,5 +65,5 @@ jobs:
         aws deploy create-deployment --application-name weather 
         --deployment-group-name weather-deploy-group 
         --file-exists-behavior OVERWRITE 
-        --s3-location bucket=weather-cicd-bucket, bundleType=zip, key=project-weather.zip 
+        --s3-location bucket=weather-cicd-bucket,bundleType=zip,key=project-weather.zip 
         --region ap-northeast-2
