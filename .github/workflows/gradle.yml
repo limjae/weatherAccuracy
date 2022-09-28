@@ -61,8 +61,8 @@ jobs:
         if: contains(github.ref, 'master')
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -f Dockerfile -t ${{ secrets.DOCKER_REPO }}/weather .
-          docker push ${{ secrets.DOCKER_REPO }}/weather
+          docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/weather .
+          docker push ${{ secrets.DOCKER_USERNAME }}/weather
 
 #      ## docker build & push to develop
 #      - name: Docker build & push to dev
