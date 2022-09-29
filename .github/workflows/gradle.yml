@@ -34,23 +34,23 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      ## create application-dev.properties
-      - name: make application-dev.properties
-        if: contains(github.ref, 'develop')
-        run: |
-          cd ./src/main/resources
-          touch ./application-dev.properties
-          echo "${{ secrets.PROPERTIES_DEV }}" > ./application-dev.properties
-        shell: bash
-
-      ## create application-prod.properties
-      - name: make application-prod.properties
-        if: contains(github.ref, 'main')
-        run: |
-          cd ./src/main/resources
-          touch ./application-prod.properties
-          echo "${{ secrets.PROPERTIES_PROD }}" > ./application-prod.properties
-        shell: bash
+#      ## create application-dev.properties
+#      - name: make application-dev.properties
+#        if: contains(github.ref, 'develop')
+#        run: |
+#          cd ./src/main/resources
+#          touch ./application-dev.properties
+#          echo "${{ secrets.PROPERTIES_DEV }}" > ./application-dev.properties
+#        shell: bash
+#
+#      ## create application-prod.properties
+#      - name: make application-prod.properties
+#        if: contains(github.ref, 'main')
+#        run: |
+#          cd ./src/main/resources
+#          touch ./application-prod.properties
+#          echo "${{ secrets.PROPERTIES_PROD }}" > ./application-prod.properties
+#        shell: bash
 
       ## gradle build
       - name: Build with Gradle
@@ -84,9 +84,9 @@ jobs:
           envs: GITHUB_SHA
           script: |
             sudo docker rm -f $(docker ps -qa) || true
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/weather
-            docker-compose up -d
-            docker image prune -f
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/weather || true
+            docker-compose up -d || true
+            docker image prune -f || true
 
 #      ## deploy to develop
 #      - name: Deploy to dev
