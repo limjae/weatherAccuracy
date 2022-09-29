@@ -75,7 +75,7 @@ jobs:
       ## deploy to production
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
-        id: deploy-prod
+        id: deploy
         if: contains(github.ref, 'master')
         with:
           host: ${{ secrets.AWS_HOST }}
@@ -89,7 +89,7 @@ jobs:
 
       - name: Clean up images in EC2
         uses: appleboy/ssh-action@master
-        id: deploy-prod
+        id: clean-up
         if: contains(github.ref, 'master')
         with:
           host: ${{ secrets.AWS_HOST }}
