@@ -34,14 +34,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-#      ## create application-dev.properties
-#      - name: make application-dev.properties
-#        if: contains(github.ref, 'develop')
-#        run: |
-#          cd ./src/main/resources
-#          touch ./application-dev.properties
-#          echo "${{ secrets.PROPERTIES_DEV }}" > ./application-dev.properties
-#        shell: bash
+      ## create application-dev.properties
+      - name: make secret_keys.yaml
+        if: contains(github.ref, 'master')
+        run: |
+          cd ./src/main/resources
+          touch ./secret_keys.yaml
+          echo "${{ secrets.SECRET_SPRING_KEYS }}" > ./secret_keys.yaml
+        shell: bash
 #
 #      ## create application-prod.properties
 #      - name: make application-prod.properties
