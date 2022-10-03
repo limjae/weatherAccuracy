@@ -28,7 +28,8 @@ jobs:
         run: |
           cd ./src/main/resources
           touch ./secret_keys.yaml
-          echo "${{ secrets.SECRET_SPRING_KEYS }}" > ./secret_keys.yaml
+          echo "${{ secrets.SECRET_SPRING_KEYS }}" > ./secret-keys.yaml
+          ls
         shell: bash
 
       ## gradle caching
