@@ -23,6 +23,14 @@ jobs:
           java-version: '17'
           distribution: 'temurin' # https://github.com/actions/setup-java
 
+      ## create application-dev.properties
+      - name: make secret_keys.yaml
+        run: |
+          cd ./src/main/resources
+          touch ./secret_keys.yaml
+          echo "${{ secrets.SECRET_SPRING_KEYS }}" > ./secret_keys.yaml
+        shell: bash
+
       ## gradle caching
       - name: Gradle Caching
         uses: actions/cache@v3
@@ -34,14 +42,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      ## create application-dev.properties
-      - name: make secret_keys.yaml
-        if: contains(github.ref, 'master')
-        run: |
-          cd ./src/main/resources
-          touch ./secret_keys.yaml
-          echo "${{ secrets.SECRET_SPRING_KEYS }}" > ./secret_keys.yaml
-        shell: bash
 #
 #      ## create application-prod.properties
 #      - name: make application-prod.properties
