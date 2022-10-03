@@ -1,4 +1,4 @@
-package com.limjae.controller;
+package com.limjae.weather.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;

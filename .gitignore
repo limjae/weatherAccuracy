@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### SECRETS ###
+src/main/resources/secret-keys.yaml
