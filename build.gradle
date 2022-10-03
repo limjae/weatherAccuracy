@@ -18,6 +18,15 @@ repositories {
 	mavenCentral()
 }
 
+sourceSets {
+	main {
+		resources {
+			srcDirs("src/main/resources")
+		}
+	}
+}
+//출처: https://code-nen.tistory.com/123 [넨이의 코딩:티스토리]
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-batch'
 	implementation 'org.springframework.boot:spring-boot-starter-quartz'
@@ -38,3 +47,4 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
