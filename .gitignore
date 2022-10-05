@@ -38,4 +38,5 @@ out/
 
 ### SECRETS ###
 src/main/resources/secret-keys.yaml
+src/main/resources/prod.yaml
 docker-compose.yaml
