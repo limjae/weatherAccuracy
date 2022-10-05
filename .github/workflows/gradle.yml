@@ -32,6 +32,15 @@ jobs:
           ls
         shell: bash
 
+      ## create application-dev.properties
+      - name: make application-prod.yaml
+        run: |
+          cd ./src/main/resources
+          touch ./application-prod.yaml
+          echo "${{ secrets.PROD_SPRING_KEYS }}" > ./application-prod.yaml
+          ls
+        shell: bash
+
       ## gradle caching
       - name: Gradle Caching
         uses: actions/cache@v3

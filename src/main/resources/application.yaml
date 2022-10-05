@@ -1,4 +1,9 @@
 spring:
+  jpa:
+    open-in-view: false
+  batch:
+    jdbc:
+      isolation-level-for-create: default
   profiles:
     active: prod
   config:
