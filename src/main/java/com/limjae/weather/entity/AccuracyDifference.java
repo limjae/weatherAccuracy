@@ -1,12 +1,11 @@
 package com.limjae.weather.entity;
 
-import com.limjae.weather.entity._global.WeatherEntity;
-import com.limjae.weather.openapi.vo.enums.LocationEnum;
-import com.limjae.weather.openapi.vo.enums.RainEnum;
+import com.limjae.weather.entity._global.WeatherInfo;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 
@@ -20,5 +19,5 @@ public class AccuracyDifference {
     private Long id;
 
     @Embedded
-    private WeatherEntity weatherInfo;
+    private WeatherInfo weatherInfo;
 }

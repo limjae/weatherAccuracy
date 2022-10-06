@@ -1,7 +1,7 @@
 package com.limjae.weather.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.limjae.weather.openapi.domain.ForecastResult;
+import com.limjae.weather.openapi.service.OpenAPIService;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.parser.ParseException;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,13 +13,12 @@ import java.net.URISyntaxException;
 @RestController
 @RequiredArgsConstructor
 public class WeatherApiController {
-    private final ForecastResult forecastResult;
+    private final OpenAPIService openAPIService;
 
     @RequestMapping("/short/forecast")
-    public String shortForecast() throws UnsupportedEncodingException, URISyntaxException, ParseException, JsonProcessingException, InterruptedException {
+    public String shortForecast() throws JsonProcessingException, InterruptedException {
 
-        Object shortForeCastResult = forecastResult.getShortForeCastResult();
-        System.out.println("forecastResult = " + shortForeCastResult.toString());
+        openAPIService.loadForeCastToDB();
 
         return "Hello";
     }

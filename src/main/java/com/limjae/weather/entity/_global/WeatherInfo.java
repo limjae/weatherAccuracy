@@ -1,17 +1,22 @@
-package com.limjae.weather.openapi.vo;
+package com.limjae.weather.entity._global;
 
-import com.limjae.weather.openapi.dto.ForecastResponseDto;
-import com.limjae.weather.openapi.vo.enums.LocationEnum;
-import com.limjae.weather.openapi.vo.enums.RainEnum;
-import com.limjae.weather.openapi.vo.enums.SKYEnum;
-import lombok.Getter;
-import lombok.ToString;
+import com.limjae.weather.openapi.dto.OpenAPIResponseDto;
+import com.limjae.weather.entity.enums.LocationEnum;
+import com.limjae.weather.entity.enums.RainEnum;
+import lombok.*;
 
+import javax.persistence.Embeddable;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+@Embeddable
 @Getter
 @ToString
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class WeatherInfo {
+
+    private LocalDateTime measuredDate;
     private LocationEnum location = LocationEnum.UNKNOWN;
     // celsius
     private double temperature = 0.0;
@@ -30,14 +35,16 @@ public class WeatherInfo {
     // PTY
     private RainEnum rainCondition;
 
-    public WeatherInfo(ForecastResponseDto.Items items) {
-        List<ForecastResponseDto.WeatherInfo> infoList = items.getItem();
-        if (infoList.size() > 0){
-            ForecastResponseDto.WeatherInfo info = infoList.get(0);
+    public WeatherInfo(OpenAPIResponseDto.Items items) {
+        List<OpenAPIResponseDto.Info> infoList = items.getItem();
+        if (infoList.size() > 0) {
+            OpenAPIResponseDto.Info info = infoList.get(0);
             this.location = LocationEnum.valueOfPoint(new LocationEnum.Point(info.getNx(), info.getNy()));
+            this.measuredDate = LocalDateTime.parse(info.getBaseDate() + info.getBaseTime(),
+                    DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
         }
 
-        for (ForecastResponseDto.WeatherInfo info : infoList) {
+        for (OpenAPIResponseDto.Info info : infoList) {
             switch (info.getCategory()) {
                 case "T1H" -> this.temperature = info.getObsrValue();
                 case "RN1" -> this.rainPerHour = info.getObsrValue();

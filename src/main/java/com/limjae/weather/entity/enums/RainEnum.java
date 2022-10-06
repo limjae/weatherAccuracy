@@ -1,6 +1,4 @@
-package com.limjae.weather.openapi.vo.enums;
-
-import lombok.Getter;
+package com.limjae.weather.entity.enums;
 
 import java.util.Map;
 import java.util.function.Function;

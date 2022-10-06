@@ -1,8 +1,7 @@
 package com.limjae.weather.entity;
 
-import com.limjae.weather.entity._global.WeatherEntity;
-import com.limjae.weather.openapi.vo.enums.LocationEnum;
-import com.limjae.weather.openapi.vo.enums.RainEnum;
+import com.limjae.weather.entity._global.WeatherInfo;
+import com.limjae.weather.entity.enums.ForecastTypeEnum;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,5 +19,13 @@ public class ActualWeather {
     private Long id;
 
     @Embedded
-    private WeatherEntity weatherInfo;
+    private WeatherInfo weatherInfo;
+
+    @Enumerated(EnumType.STRING)
+    ForecastTypeEnum type;
+
+    public ActualWeather(WeatherInfo info, ForecastTypeEnum type){
+        this.weatherInfo = info;
+        this.type = type;
+    }
 }

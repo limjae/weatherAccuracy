@@ -1,12 +1,11 @@
 package com.limjae.weather.openapi.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class ForecastResponseDto {
+public class OpenAPIResponseDto {
     private Header header;
     private Body body;
 
@@ -27,11 +26,11 @@ public class ForecastResponseDto {
 
     @Data
     public static class Items {
-        private List<WeatherInfo> item;
+        private List<Info> item;
     }
 
     @Data
-    public static class WeatherInfo {
+    public static class Info {
         private String baseDate;
         private String baseTime;
         private String category;

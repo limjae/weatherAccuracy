@@ -1,4 +1,4 @@
-package com.limjae.weather.openapi.vo.enums;
+package com.limjae.weather.entity.enums;
 
 public enum SKYEnum {
     MISSING,
