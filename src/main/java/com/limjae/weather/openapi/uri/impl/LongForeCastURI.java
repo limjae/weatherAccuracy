@@ -1,6 +1,7 @@
-package com.limjae.weather.openapi.url;
+package com.limjae.weather.openapi.uri.impl;
 
 import com.limjae.weather.entity.enums.LocationEnum;
+import com.limjae.weather.openapi.uri.OpenApiUri;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
