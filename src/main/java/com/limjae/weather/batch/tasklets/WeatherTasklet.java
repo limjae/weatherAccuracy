@@ -1,7 +1,6 @@
 package com.limjae.weather.batch.tasklets;
 
-import com.limjae.weather.openapi.service.OpenAPIService;
-import com.limjae.weather.entity.enums.LocationEnum;
+import com.limjae.weather.openapi.service.OpenApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.StepContribution;
@@ -14,11 +13,11 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class WeatherTasklet implements Tasklet {
-    private final OpenAPIService openAPIService;
+    private final OpenApiService openAPIService;
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {                //business 업무 시작        for(int inx = 0 ; inx < 20 ; inx++) {            log.info("[step1] : " + inx);        }         //business 업무 끝        return RepeatStatus.FINISHED;    }}
-        openAPIService.loadAllForecasts();
+        openAPIService.loadAllLocation();
 
 
         return RepeatStatus.FINISHED;

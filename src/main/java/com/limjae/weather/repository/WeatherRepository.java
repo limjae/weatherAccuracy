@@ -1,10 +1,10 @@
 package com.limjae.weather.repository;
 
-import com.limjae.weather.entity.ActualWeather;
+import com.limjae.weather.entity.Weather;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ActualWeatherRepository extends JpaRepository<ActualWeather, Long> {
+public interface WeatherRepository extends JpaRepository<Weather, Long> {
 
 }

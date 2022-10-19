@@ -4,6 +4,8 @@ spring:
   batch:
     jdbc:
       isolation-level-for-create: default
+    job:
+      names: NONE
   profiles:
     active: prod
   config:

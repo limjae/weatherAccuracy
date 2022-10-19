@@ -13,8 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Slf4j
-@Component
-public class LiveForecastURI implements OpenApiUri {
+public class LiveForecastApiUri implements OpenApiUri {
     private static final String baseUrl = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst";
 
     @Value("${secret_key.encoding.short}")

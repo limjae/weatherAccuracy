@@ -9,26 +9,27 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.Scheduled;
 
 // read datas from openapi
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-public class LoadWeatherBatchConfiguration {
+public class LoadApiBatchConfiguration {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
 
     @Bean
-    public Job loadWeatherJob() {
+    public Job job() {
         return jobBuilderFactory.get("stepNextJob")
-                .start(shortForecastLoadStep())
+                .start(loadLiveApiStep())
                 .next(longForecastLoadStep())
                 .build();
     }
 
     // 지역별 분리 필요
     @Bean
-    public Step shortForecastLoadStep() {
+    public Step loadLiveApiStep() {
         return stepBuilderFactory.get("step1")
                 .tasklet((contribution, chunkContext) -> {
                     log.info(">>>>> This is Step1");
