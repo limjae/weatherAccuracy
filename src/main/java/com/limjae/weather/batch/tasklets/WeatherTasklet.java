@@ -16,8 +16,15 @@ public class WeatherTasklet implements Tasklet {
     private final OpenApiService openAPIService;
 
     @Override
-    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {                //business 업무 시작        for(int inx = 0 ; inx < 20 ; inx++) {            log.info("[step1] : " + inx);        }         //business 업무 끝        return RepeatStatus.FINISHED;    }}
-        openAPIService.loadAllLocation();
+    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+        //business 업무 시작        for(int inx = 0 ; inx < 20 ; inx++) {
+        // log.info("[step1] : " + inx);
+        // }
+        // business 업무 끝
+
+
+
+//        openAPIService.loadAllLocation();
 
 
         return RepeatStatus.FINISHED;

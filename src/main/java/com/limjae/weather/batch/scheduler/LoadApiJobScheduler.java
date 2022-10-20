@@ -23,7 +23,7 @@ public class LoadApiJobScheduler {
     private final JobLauncher jobLauncher;
     private final LoadApiBatchConfiguration batchConfiguration;
 
-    @Scheduled(cron = "10 * * * * *")
+    @Scheduled(cron = "* * 2 * * *")
     public void runJob() {
 
         Map<String, JobParameter> confMap = new HashMap<>();

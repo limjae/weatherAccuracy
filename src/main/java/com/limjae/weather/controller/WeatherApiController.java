@@ -14,7 +14,7 @@ public class WeatherApiController {
     @RequestMapping("/forecast/live")
     public String shortForecast() throws JsonProcessingException, InterruptedException {
 
-        openAPIService.loadAllLocation();
+//        openAPIService.loadAllLocation();
 
         return "Hello";
     }

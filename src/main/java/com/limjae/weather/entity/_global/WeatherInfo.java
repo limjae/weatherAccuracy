@@ -6,6 +6,8 @@ import com.limjae.weather.entity.enums.RainEnum;
 import lombok.*;
 
 import javax.persistence.Embeddable;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.List;
 public class WeatherInfo {
 
     private LocalDateTime measuredDate;
+    @Enumerated(EnumType.STRING)
     private LocationEnum location = LocationEnum.UNKNOWN;
     // celsius
     private double temperature = 0.0;

@@ -1,19 +1,33 @@
 package com.limjae.weather.openapi.uri;
 
-import com.limjae.weather.openapi.basetime.OpenApiBaseTime;
 import com.limjae.weather.openapi.type.OpenApiType;
-import com.limjae.weather.openapi.uri.impl.LiveForecastApiUri;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
-import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+@Component
 public class OpenApiUriFactory {
+    private final Map<OpenApiType, OpenApiUri> uriMap = new HashMap<>();
 
-    public static OpenApiUri generate(OpenApiType type, OpenApiBaseTime baseTime) {
-        return switch (type) {
-            case LIVE, SHORT_TERM -> new LiveForecastApiUri();
-//            case LIVE, SHORT -> new LiveShortBaseTime();
-            default -> throw new RuntimeException("Invalid Type for generate OpenApiBaseUri");
-        };
+    public OpenApiUriFactory(List<OpenApiUri> uriList) {
+        if (CollectionUtils.isEmpty(uriList)) {
+            throw new IllegalArgumentException("존재하는 OpenApiUri 구현체가 없음");
+        }
+
+        for (OpenApiUri openApiUri : uriList) {
+            this.uriMap.put(openApiUri.getType(), openApiUri);
+        }
+    }
+
+    public Set<OpenApiType> getTypes() {
+        return uriMap.keySet();
+    }
+
+    public OpenApiUri generate(OpenApiType type) {
+        return uriMap.get(type);
     }
 }

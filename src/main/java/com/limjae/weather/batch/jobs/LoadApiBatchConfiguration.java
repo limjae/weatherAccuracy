@@ -1,5 +1,7 @@
 package com.limjae.weather.batch.jobs;
 
+import com.limjae.weather.openapi.type.OpenApiType;
+import com.limjae.weather.service.WeatherService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -18,32 +20,34 @@ import org.springframework.scheduling.annotation.Scheduled;
 public class LoadApiBatchConfiguration {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
+    private final WeatherService weatherService;
 
     @Bean
     public Job job() {
         return jobBuilderFactory.get("stepNextJob")
                 .start(loadLiveApiStep())
-                .next(longForecastLoadStep())
+                .next(loadMidtermApiStep())
                 .build();
     }
 
     // 지역별 분리 필요
     @Bean
     public Step loadLiveApiStep() {
-        return stepBuilderFactory.get("step1")
+        return stepBuilderFactory.get("loadLiveApiStep")
                 .tasklet((contribution, chunkContext) -> {
-                    log.info(">>>>> This is Step1");
+                    log.info(">>>>> Loading From Live Forecast Api");
+                    weatherService.loadToDB(OpenApiType.LIVE);
                     return RepeatStatus.FINISHED;
                 })
                 .build();
     }
 
-    // 지역별 분리 필요
     @Bean
-    public Step longForecastLoadStep() {
-        return stepBuilderFactory.get("step2")
+    public Step loadMidtermApiStep() {
+        return stepBuilderFactory.get("loadMidtermApiStep")
                 .tasklet((contribution, chunkContext) -> {
-                    log.info(">>>>> This is Step2");
+                    log.info(">>>>> Loading From Midterm Forecast Api");
+                    weatherService.loadToDB(OpenApiType.LIVE);
                     return RepeatStatus.FINISHED;
                 })
                 .build();

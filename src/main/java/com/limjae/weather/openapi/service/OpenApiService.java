@@ -4,8 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.limjae.weather.entity.enums.LocationEnum;
-import com.limjae.weather.openapi.basetime.OpenApiBaseTime;
-import com.limjae.weather.openapi.basetime.OpenApiBaseTimeFactory;
+import com.limjae.weather.openapi.uri.OpenApiParameter;
+import com.limjae.weather.openapi.time.OpenApiTime;
+import com.limjae.weather.openapi.time.OpenApiTimeFactory;
 import com.limjae.weather.openapi.type.OpenApiType;
 import com.limjae.weather.openapi.uri.OpenApiUri;
 import com.limjae.weather.openapi.uri.OpenApiUriFactory;
@@ -32,17 +33,20 @@ import java.util.concurrent.TimeUnit;
 @Transactional(readOnly = true)
 public class OpenApiService {
     private final WeatherRepository actualWeatherRepository;
+    private final OpenApiUriFactory uriFactory;
+    private final OpenApiTimeFactory baseTimeFactory;
 
-    public WeatherInfo load(OpenApiType type, LocationEnum location, LocalDateTime dateTime) {
-        OpenApiBaseTime baseTime = OpenApiBaseTimeFactory.getOpenApiBaseTime(type, dateTime);
-        OpenApiUri openApiUri = OpenApiUriFactory.generate(type, baseTime);
-        URI uri = openApiUri.getURI(baseTime, location);
+    public WeatherInfo load(OpenApiType type, LocalDateTime dateTime, LocationEnum location) {
+        OpenApiTime apiTime = baseTimeFactory.generate(type);
+        OpenApiUri openApiUri = uriFactory.generate(type);
+        OpenApiParameter openApiParameter = new OpenApiParameter(apiTime, dateTime, location);
+        URI uri = openApiUri.getURI(openApiParameter);
 
         return connect(uri);
     }
 
 
-    public List<WeatherInfo> loadAllLocation() throws JsonProcessingException, InterruptedException {
+    public List<WeatherInfo> loadAllLocation(OpenApiType type, LocalDateTime dateTime) {
         List<WeatherInfo> result = new ArrayList<>();
 
         for (LocationEnum location : LocationEnum.values()) {
@@ -51,7 +55,7 @@ public class OpenApiService {
             }
 
             result.add(
-                    load(OpenApiType.LIVE, location, LocalDateTime.now().withHour(6)));
+                    load(type, dateTime, location));
         }
         return result;
     }
@@ -73,8 +77,6 @@ public class OpenApiService {
                 } else {
                     ObjectMapper mapper = new ObjectMapper();
                     OpenAPIResponseDto responseDTO = mapper.convertValue(data, OpenAPIResponseDto.class);
-                    responseDTO.getBody().getItems().getItem().forEach(i -> log.info("info = " + i));
-
                     return new WeatherInfo(responseDTO.getBody().getItems());
                 }
             }

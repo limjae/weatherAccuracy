@@ -7,6 +7,6 @@ package com.limjae.weather.openapi.type;
 public enum OpenApiType {
     LIVE,
     SHORT_TERM,
-    MIDTERM,
+    MID_TERM,
     LONG_TERM
 }
