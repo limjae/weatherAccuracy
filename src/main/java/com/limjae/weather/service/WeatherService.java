@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,26 +24,33 @@ public class WeatherService {
     private final OpenApiService openApiService;
 
     @Transactional
-    public Weather loadToDB(OpenApiType type) {
-        List<WeatherInfo> weathers = openApiService.loadAllLocation(type, LocalDateTime.now().withHour(6));
-        log.info("load total {} weathers", weathers.size());
-        weathers.forEach(weatherInfo -> {
-            saveDistinct(new Weather(weatherInfo, type));
-        });
-
-        WeatherInfo weatherInfo = openApiService.load(type, LocalDateTime.now().withHour(6), LocationEnum.SEOUL);
-        return saveDistinct(new Weather(weatherInfo, type));
+    public List<Long> loadToDB(OpenApiType type) {
+        return loadToDB(type, 6);
     }
 
     @Transactional
-    public Weather saveDistinct(Weather weather) {
+    public List<Long> loadToDB(OpenApiType type, int hour) {
+        List<Long> weatherIds = new ArrayList<>();
+        List<WeatherInfo> weathers = openApiService.loadAllLocation(
+                type,
+                LocalDateTime.now().withHour(hour)
+        );
+        log.info("load total {} weathers", weathers.size());
+        weathers.forEach(weatherInfo -> {
+            weatherIds.add(saveDistinct(new Weather(weatherInfo, type)));
+        });
+        return weatherIds;
+    }
+
+    @Transactional
+    public Long saveDistinct(Weather weather) {
         Weather targetWeather = weatherRepository.findFirstByTypeAndWeatherInfo_LocationAndWeatherInfo_MeasuredDate(
                         weather.getType(),
                         weather.getWeatherInfo().getLocation(),
                         weather.getWeatherInfo().getMeasuredDate())
                 .orElse(weather);
 
-        return weatherRepository.save(targetWeather);
+        return weatherRepository.save(targetWeather).getId();
     }
 
 }

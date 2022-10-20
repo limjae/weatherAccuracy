@@ -1,6 +1,6 @@
 package com.limjae.weather.batch.scheduler;
 
-import com.limjae.weather.batch.jobs.LoadApiBatchConfiguration;
+import com.limjae.weather.batch.job.LoadApiBatchConfiguration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobParameter;
@@ -23,20 +23,67 @@ public class LoadApiJobScheduler {
     private final JobLauncher jobLauncher;
     private final LoadApiBatchConfiguration batchConfiguration;
 
-    @Scheduled(cron = "* * 2 * * *")
-    public void runJob() {
-
+    //    @Scheduled(cron = "10 * * * * *")
+    @Scheduled(cron = "* * 6 * * *")
+    public void runAt6() {
         Map<String, JobParameter> confMap = new HashMap<>();
         confMap.put("time", new JobParameter(System.currentTimeMillis()));
+        confMap.put("executeHour", new JobParameter("6"));
         JobParameters jobParameters = new JobParameters(confMap);
 
         try {
-
-            jobLauncher.run(batchConfiguration.job(), jobParameters);
+            jobLauncher.run(batchConfiguration.liveJob(), jobParameters);
 
         } catch (JobExecutionAlreadyRunningException | JobInstanceAlreadyCompleteException
                  | JobParametersInvalidException | org.springframework.batch.core.repository.JobRestartException e) {
+            log.error(e.getMessage());
+        }
+    }
 
+    @Scheduled(cron = "* * 9 * * *")
+    public void runAt9() {
+        Map<String, JobParameter> confMap = new HashMap<>();
+        confMap.put("time", new JobParameter(System.currentTimeMillis()));
+        confMap.put("executeHour", new JobParameter("9"));
+        JobParameters jobParameters = new JobParameters(confMap);
+
+        try {
+            jobLauncher.run(batchConfiguration.liveJob(), jobParameters);
+
+        } catch (JobExecutionAlreadyRunningException | JobInstanceAlreadyCompleteException
+                 | JobParametersInvalidException | org.springframework.batch.core.repository.JobRestartException e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    @Scheduled(cron = "* * 18 * * *")
+    public void runAt18() {
+        Map<String, JobParameter> confMap = new HashMap<>();
+        confMap.put("time", new JobParameter(System.currentTimeMillis()));
+        confMap.put("executeHour", new JobParameter("18"));
+        JobParameters jobParameters = new JobParameters(confMap);
+
+        try {
+            jobLauncher.run(batchConfiguration.liveJob(), jobParameters);
+
+        } catch (JobExecutionAlreadyRunningException | JobInstanceAlreadyCompleteException
+                 | JobParametersInvalidException | org.springframework.batch.core.repository.JobRestartException e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    @Scheduled(cron = "* * 21 * * *")
+    public void runAt21() {
+        Map<String, JobParameter> confMap = new HashMap<>();
+        confMap.put("time", new JobParameter(System.currentTimeMillis()));
+        confMap.put("executeHour", new JobParameter("21"));
+        JobParameters jobParameters = new JobParameters(confMap);
+
+        try {
+            jobLauncher.run(batchConfiguration.liveJob(), jobParameters);
+
+        } catch (JobExecutionAlreadyRunningException | JobInstanceAlreadyCompleteException
+                 | JobParametersInvalidException | org.springframework.batch.core.repository.JobRestartException e) {
             log.error(e.getMessage());
         }
     }
