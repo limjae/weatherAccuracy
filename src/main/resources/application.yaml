@@ -4,10 +4,12 @@ spring:
   batch:
     jdbc:
       isolation-level-for-create: default
+      initialize-schema: always
     job:
       names: NONE
   profiles:
     active: prod
   config:
     import: secret-keys.yaml
+
 
