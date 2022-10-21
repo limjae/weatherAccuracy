@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @StepScope
 @Slf4j
 @RequiredArgsConstructor
-public class LoadLiveApiTasklet implements Tasklet {
+public class LoadAfter3DayWithMidtermApiTasklet implements Tasklet {
 
     @Value("#{jobParameters[executeHour]}")
     private String executeHour;
@@ -26,10 +26,10 @@ public class LoadLiveApiTasklet implements Tasklet {
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-        log.info(">>>>> Loading Live WeatherNoUse From Live Forecast Api");
+        log.info(">>>>> Loading 3 Day After Prediction From Midterm Forecast Api");
         log.info("Parameter executeHour: {}", executeHour);
-        LocalDateTime dateTime = LocalDateTime.now().withHour(Integer.parseInt(executeHour));
-        liveService.loadAllToDB(OpenApiType.LIVE, dateTime);
+        LocalDateTime dateTime = LocalDateTime.now().plusDays(3).withHour(Integer.parseInt(executeHour));
+        liveService.loadAllToDB(OpenApiType.MIDTERM, dateTime);
         return RepeatStatus.FINISHED;
     }
 }

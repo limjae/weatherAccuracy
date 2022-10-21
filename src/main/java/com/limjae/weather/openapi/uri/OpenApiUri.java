@@ -11,5 +11,4 @@ public interface OpenApiUri {
     public URI getURI();
 
     public URI getURI(OpenApiParameter openApiParameter);
-
 }

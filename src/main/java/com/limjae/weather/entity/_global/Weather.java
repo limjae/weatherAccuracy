@@ -1,8 +1,10 @@
 package com.limjae.weather.entity._global;
 
-import com.limjae.weather.openapi.dto.OpenAPIResponseDto;
+import com.limjae.weather.openapi.dto.CommonApiResponseDto;
+import com.limjae.weather.openapi.dto.LiveAPIResponseDto;
 import com.limjae.weather.entity.enums.LocationEnum;
 import com.limjae.weather.entity.enums.RainEnum;
+import com.limjae.weather.openapi.type.OpenApiType;
 import lombok.*;
 
 import javax.persistence.Embeddable;
@@ -16,9 +18,12 @@ import java.util.List;
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class WeatherInfo {
-
+public class Weather {
     private LocalDateTime measuredDate;
+
+    @Enumerated(EnumType.STRING)
+    private OpenApiType type;
+
     @Enumerated(EnumType.STRING)
     private LocationEnum location = LocationEnum.UNKNOWN;
     // celsius
@@ -38,16 +43,18 @@ public class WeatherInfo {
     // PTY
     private RainEnum rainCondition;
 
-    public WeatherInfo(OpenAPIResponseDto.Items items) {
-        List<OpenAPIResponseDto.Info> infoList = items.getItem();
+    public Weather(OpenApiType type, CommonApiResponseDto responseDto) {
+        this.type = type;
+
+        List<CommonApiResponseDto.Info> infoList = responseDto.getItems().getItem();
         if (infoList.size() > 0) {
-            OpenAPIResponseDto.Info info = infoList.get(0);
+            CommonApiResponseDto.Info info = infoList.get(0);
             this.location = LocationEnum.valueOfPoint(new LocationEnum.Point(info.getNx(), info.getNy()));
             this.measuredDate = LocalDateTime.parse(info.getBaseDate() + info.getBaseTime(),
                     DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
         }
 
-        for (OpenAPIResponseDto.Info info : infoList) {
+        for (CommonApiResponseDto.Info info : infoList) {
             switch (info.getCategory()) {
                 case "T1H" -> this.temperature = info.getObsrValue();
                 case "RN1" -> this.rainPerHour = info.getObsrValue();

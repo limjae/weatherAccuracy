@@ -22,23 +22,22 @@ public class LoadApiBatchConfiguration {
     private final LoadLiveApiTasklet loadLiveApiTasklet;
 
     @Bean
-    public Job liveJob() {
+    public Job liveApiJob() {
         return jobBuilderFactory.get("OpenApiLoadBatchEvery6")
-                .start(loadLiveApiStep())
+                .start(liveApiStep())
                 .build();
     }
 
-    // 지역별 분리 필요
     @Bean
     @JobScope
-    public Step loadLiveApiStep() {
-        return stepBuilderFactory.get("loadLiveApiStep")
+    public Step liveApiStep() {
+        return stepBuilderFactory.get("liveApiStep")
                 .tasklet(loadLiveApiTasklet)
                 .build();
     }
 
     @Bean
-    public Step loadMidtermApiStep() {
+    public Step midtermApiStep() {
         return stepBuilderFactory.get("loadMidtermApiStep")
                 .tasklet(loadLiveApiTasklet)
                 .build();

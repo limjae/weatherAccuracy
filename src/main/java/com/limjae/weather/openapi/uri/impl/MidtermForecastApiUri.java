@@ -1,25 +1,27 @@
 package com.limjae.weather.openapi.uri.impl;
 
 import com.limjae.weather.entity.enums.LocationEnum;
-import com.limjae.weather.openapi.time.impl.LiveTime;
-import com.limjae.weather.openapi.uri.OpenApiParameter;
+import com.limjae.weather.openapi.time.impl.MidtermTime;
 import com.limjae.weather.openapi.type.OpenApiType;
+import com.limjae.weather.openapi.uri.OpenApiParameter;
 import com.limjae.weather.openapi.uri.OpenApiUri;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.net.*;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class LiveForecastApiUri implements OpenApiUri {
-    private static final String baseUrl = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst";
-    private final LiveTime liveTime;
+public class MidtermForecastApiUri implements OpenApiUri {
+    private static final String baseUrl = "http://apis.data.go.kr/1360000/MidFcstInfoService";
+    private final MidtermTime midtermTime;
     @Value("${secret_key.encoding.short}")
     private String encodingKey;
     @Value("${secret_key.decoding.short}")
@@ -32,7 +34,7 @@ public class LiveForecastApiUri implements OpenApiUri {
 
     @Override
     public URI getURI() {
-        OpenApiParameter openApiParameter = new OpenApiParameter(liveTime, LocalDateTime.now().withHour(6), LocationEnum.SEOUL);
+        OpenApiParameter openApiParameter = new OpenApiParameter(midtermTime, LocalDateTime.now().plusDays(3).withHour(9), LocationEnum.SEOUL);
         return getURI(openApiParameter);
     }
 

@@ -3,16 +3,17 @@ package com.limjae.weather.openapi.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.limjae.weather.entity._global.Weather;
 import com.limjae.weather.entity.enums.LocationEnum;
-import com.limjae.weather.openapi.uri.OpenApiParameter;
+import com.limjae.weather.openapi.dto.CommonApiResponseDto;
+import com.limjae.weather.openapi.dto.LiveAPIResponseDto;
+import com.limjae.weather.openapi.dto.ShortAPIResponseDto;
 import com.limjae.weather.openapi.time.OpenApiTime;
 import com.limjae.weather.openapi.time.OpenApiTimeFactory;
 import com.limjae.weather.openapi.type.OpenApiType;
+import com.limjae.weather.openapi.uri.OpenApiParameter;
 import com.limjae.weather.openapi.uri.OpenApiUri;
 import com.limjae.weather.openapi.uri.OpenApiUriFactory;
-import com.limjae.weather.entity._global.WeatherInfo;
-import com.limjae.weather.openapi.dto.OpenAPIResponseDto;
-import com.limjae.weather.repository.WeatherRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -31,23 +32,21 @@ import java.util.concurrent.TimeUnit;
 @Component
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class OpenApiService {
-    private final WeatherRepository actualWeatherRepository;
+public class ShortApiService {
     private final OpenApiUriFactory uriFactory;
     private final OpenApiTimeFactory baseTimeFactory;
 
-    public WeatherInfo load(OpenApiType type, LocalDateTime dateTime, LocationEnum location) {
+    public Weather load(OpenApiType type, LocalDateTime localDateTime, LocationEnum location) {
         OpenApiTime apiTime = baseTimeFactory.generate(type);
         OpenApiUri openApiUri = uriFactory.generate(type);
-        OpenApiParameter openApiParameter = new OpenApiParameter(apiTime, dateTime, location);
+        OpenApiParameter openApiParameter = new OpenApiParameter(apiTime, localDateTime, location);
         URI uri = openApiUri.getURI(openApiParameter);
 
         return connect(uri);
     }
 
-
-    public List<WeatherInfo> loadAllLocation(OpenApiType type, LocalDateTime dateTime) {
-        List<WeatherInfo> result = new ArrayList<>();
+    public List<Weather> loadAllLocation(OpenApiType type, LocalDateTime localDateTime) {
+        List<Weather> result = new ArrayList<>();
 
         for (LocationEnum location : LocationEnum.values()) {
             if (location.name().equals("UNKNOWN")) {
@@ -55,12 +54,18 @@ public class OpenApiService {
             }
 
             result.add(
-                    load(type, dateTime, location));
+                    load(type, localDateTime, location));
         }
         return result;
     }
 
-    private WeatherInfo connect(URI uri) {
+    /**
+     * 확장 병목 지점...
+     *
+     * @param uri
+     * @return
+     */
+    private Weather connect(URI uri) {
         try {
             RestTemplate restTemplate = new RestTemplate();
 
@@ -69,6 +74,7 @@ public class OpenApiService {
 
                 XmlMapper xmlMapper = new XmlMapper();
                 Map data = xmlMapper.readValue(responseEntity.getBody(), Map.class);
+                log.info("Api data: {}", data);
 
                 if (data.containsKey("cmmMsgHeader")) {
                     log.warn("errMsg = {}", data);
@@ -76,8 +82,10 @@ public class OpenApiService {
                     TimeUnit.SECONDS.sleep(15);
                 } else {
                     ObjectMapper mapper = new ObjectMapper();
-                    OpenAPIResponseDto responseDTO = mapper.convertValue(data, OpenAPIResponseDto.class);
-                    return new WeatherInfo(responseDTO.getBody().getItems());
+                    // 확장 병목 구문
+                    ShortAPIResponseDto shortAPIResponseDto = mapper.convertValue(data, ShortAPIResponseDto.class);
+                    CommonApiResponseDto responseDto = new CommonApiResponseDto(shortAPIResponseDto);
+                    return new Weather(OpenApiType.SHORT, responseDto);
                 }
             }
 

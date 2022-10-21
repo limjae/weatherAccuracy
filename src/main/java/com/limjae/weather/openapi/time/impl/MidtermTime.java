@@ -8,21 +8,21 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Component
-public class MidTermTime implements OpenApiTime {
+public class MidtermTime implements OpenApiTime {
 
     @Override
     public OpenApiType getType() {
-        return OpenApiType.MID_TERM;
+        return OpenApiType.MIDTERM;
     }
 
     @Override
-    public String getDate(LocalDateTime dateTime) {
-        return dateTime.format(DateTimeFormatter.BASIC_ISO_DATE);
+    public String getDate(LocalDateTime localDateTime) {
+        return localDateTime.format(DateTimeFormatter.BASIC_ISO_DATE);
     }
 
     @Override
-    public String getBaseHourAndMinute(LocalDateTime dateTime) {
-        String nearestHour = getNearestHour(dateTime);
+    public String getBaseHourAndMinute(LocalDateTime localDateTime) {
+        String nearestHour = getNearestHour(localDateTime);
         String minute = "00";
         return nearestHour + minute;
     }
@@ -31,7 +31,7 @@ public class MidTermTime implements OpenApiTime {
      * MIDTERM = 0600, 1800
      */
     private String getNearestHour(LocalDateTime dateTime) {
-        if (dateTime.getHour() < 13) {
+        if (dateTime.getHour() < 19) {
             return "06";
         } else {
             return "18";

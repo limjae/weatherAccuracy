@@ -8,23 +8,24 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Component
-public class LiveShortTime implements OpenApiTime {
+public class LiveTime implements OpenApiTime {
     @Override
     public OpenApiType getType() {
         return OpenApiType.LIVE;
     }
 
     @Override
-    public String getDate(LocalDateTime dateTime) {
-        return dateTime.format(DateTimeFormatter.BASIC_ISO_DATE);
+    public String getDate(LocalDateTime localDateTime) {
+        return localDateTime.format(DateTimeFormatter.BASIC_ISO_DATE);
     }
 
     @Override
-    public String getBaseHourAndMinute(LocalDateTime dateTime) {
-        String nearestHour = getNearestHour(dateTime);
+    public String getBaseHourAndMinute(LocalDateTime localDateTime) {
+        String nearestHour = getNearestHour(localDateTime);
         String minute = "00";
         return nearestHour + minute;
     }
+
     /**
      * LIVE, SHORT = 0500(6~8) 0800(6~7) 1700 2000
      */

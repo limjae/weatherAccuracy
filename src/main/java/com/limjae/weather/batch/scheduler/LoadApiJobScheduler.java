@@ -19,12 +19,11 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class LoadApiJobScheduler {
-
     private final JobLauncher jobLauncher;
     private final LoadApiBatchConfiguration batchConfiguration;
 
     //    @Scheduled(cron = "10 * * * * *")
-    @Scheduled(cron = "* * 6 * * *")
+    @Scheduled(cron = "0 0 6 * * *")
     public void runAt6() {
         Map<String, JobParameter> confMap = new HashMap<>();
         confMap.put("time", new JobParameter(System.currentTimeMillis()));
@@ -32,7 +31,7 @@ public class LoadApiJobScheduler {
         JobParameters jobParameters = new JobParameters(confMap);
 
         try {
-            jobLauncher.run(batchConfiguration.liveJob(), jobParameters);
+            jobLauncher.run(batchConfiguration.liveApiJob(), jobParameters);
 
         } catch (JobExecutionAlreadyRunningException | JobInstanceAlreadyCompleteException
                  | JobParametersInvalidException | org.springframework.batch.core.repository.JobRestartException e) {
@@ -40,7 +39,8 @@ public class LoadApiJobScheduler {
         }
     }
 
-    @Scheduled(cron = "* * 9 * * *")
+    // run live + midterm
+    @Scheduled(cron = "0 0 9 * * *")
     public void runAt9() {
         Map<String, JobParameter> confMap = new HashMap<>();
         confMap.put("time", new JobParameter(System.currentTimeMillis()));
@@ -48,7 +48,7 @@ public class LoadApiJobScheduler {
         JobParameters jobParameters = new JobParameters(confMap);
 
         try {
-            jobLauncher.run(batchConfiguration.liveJob(), jobParameters);
+            jobLauncher.run(batchConfiguration.liveApiJob(), jobParameters);
 
         } catch (JobExecutionAlreadyRunningException | JobInstanceAlreadyCompleteException
                  | JobParametersInvalidException | org.springframework.batch.core.repository.JobRestartException e) {
@@ -56,7 +56,7 @@ public class LoadApiJobScheduler {
         }
     }
 
-    @Scheduled(cron = "* * 18 * * *")
+    @Scheduled(cron = "0 0 18 * * *")
     public void runAt18() {
         Map<String, JobParameter> confMap = new HashMap<>();
         confMap.put("time", new JobParameter(System.currentTimeMillis()));
@@ -64,7 +64,7 @@ public class LoadApiJobScheduler {
         JobParameters jobParameters = new JobParameters(confMap);
 
         try {
-            jobLauncher.run(batchConfiguration.liveJob(), jobParameters);
+            jobLauncher.run(batchConfiguration.liveApiJob(), jobParameters);
 
         } catch (JobExecutionAlreadyRunningException | JobInstanceAlreadyCompleteException
                  | JobParametersInvalidException | org.springframework.batch.core.repository.JobRestartException e) {
@@ -72,7 +72,8 @@ public class LoadApiJobScheduler {
         }
     }
 
-    @Scheduled(cron = "* * 21 * * *")
+    // run live + midterm
+    @Scheduled(cron = "0 0 21 * * *")
     public void runAt21() {
         Map<String, JobParameter> confMap = new HashMap<>();
         confMap.put("time", new JobParameter(System.currentTimeMillis()));
@@ -80,7 +81,7 @@ public class LoadApiJobScheduler {
         JobParameters jobParameters = new JobParameters(confMap);
 
         try {
-            jobLauncher.run(batchConfiguration.liveJob(), jobParameters);
+            jobLauncher.run(batchConfiguration.liveApiJob(), jobParameters);
 
         } catch (JobExecutionAlreadyRunningException | JobInstanceAlreadyCompleteException
                  | JobParametersInvalidException | org.springframework.batch.core.repository.JobRestartException e) {

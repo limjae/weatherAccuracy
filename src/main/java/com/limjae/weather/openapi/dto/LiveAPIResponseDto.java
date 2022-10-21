@@ -1,13 +1,19 @@
 package com.limjae.weather.openapi.dto;
 
+import com.limjae.weather.openapi.type.OpenApiType;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class OpenAPIResponseDto {
+public class LiveAPIResponseDto {
     private Header header;
     private Body body;
+
+
+    public OpenApiType getType() {
+        return OpenApiType.LIVE;
+    }
 
     @Data
     public static class Header {
@@ -36,7 +42,7 @@ public class OpenAPIResponseDto {
         private String category;
         private String nx;
         private String ny;
-        double obsrValue;
+        private double obsrValue;
     }
 
 
