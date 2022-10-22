@@ -26,7 +26,7 @@ public class LoadLiveApiTasklet implements Tasklet {
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-        log.info(">>>>> Loading Live WeatherNoUse From Live Forecast Api");
+        log.info(">>>>> Loading Live Weather From Live Forecast Api");
         log.info("Parameter executeHour: {}", executeHour);
         LocalDateTime dateTime = LocalDateTime.now().withHour(Integer.parseInt(executeHour));
         liveService.loadAllToDB(OpenApiType.LIVE, dateTime);

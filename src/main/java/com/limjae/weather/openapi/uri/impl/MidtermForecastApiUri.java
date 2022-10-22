@@ -29,7 +29,7 @@ public class MidtermForecastApiUri implements OpenApiUri {
 
     @Override
     public OpenApiType getType() {
-        return OpenApiType.LIVE;
+        return OpenApiType.MIDTERM;
     }
 
     @Override

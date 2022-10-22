@@ -23,7 +23,7 @@ public class LoadApiBatchConfiguration {
 
     @Bean
     public Job liveApiJob() {
-        return jobBuilderFactory.get("OpenApiLoadBatchEvery6")
+        return jobBuilderFactory.get("LiveApiLoadBatch")
                 .start(liveApiStep())
                 .build();
     }

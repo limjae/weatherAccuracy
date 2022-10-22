@@ -15,6 +15,7 @@ import com.limjae.weather.openapi.uri.OpenApiUri;
 import com.limjae.weather.openapi.uri.OpenApiUriFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +42,7 @@ public class LiveApiService {
         OpenApiParameter openApiParameter = new OpenApiParameter(apiTime, localDateTime, location);
         URI uri = openApiUri.getURI(openApiParameter);
 
-        return connect(uri);
+        return connect(type, uri);
     }
 
     public List<Weather> loadAllLocation(OpenApiType type, LocalDateTime localDateTime) {
@@ -64,27 +65,34 @@ public class LiveApiService {
      * @param uri
      * @return
      */
-    private Weather connect(URI uri) {
+    private Weather connect(OpenApiType type, URI uri) {
         try {
             RestTemplate restTemplate = new RestTemplate();
 
             for (int rounds = 0; rounds < 5; rounds++) {
                 ResponseEntity<String> responseEntity = restTemplate.getForEntity(uri, String.class);
-
                 XmlMapper xmlMapper = new XmlMapper();
                 Map data = xmlMapper.readValue(responseEntity.getBody(), Map.class);
-                log.info("Api data: {}", data);
+                log.debug("Api responseEntity: {}", responseEntity);
+                log.debug("Api data: {}", data);
 
-                if (data.containsKey("cmmMsgHeader")) {
+
+                ObjectMapper mapper = new ObjectMapper();
+                try {
+                    LiveAPIResponseDto liveAPIResponseDto = mapper.convertValue(data, LiveAPIResponseDto.class);
+                    if (liveAPIResponseDto.getHeader().getResultCode() != 01){
+                        throw new RuntimeException("Api Parameter Error");
+                    }
+                    if (liveAPIResponseDto.getHeader().getResultCode() != 00) {
+                        throw new IllegalArgumentException("API 오류 입니다: " + data.toString());
+                    }
+
+                    CommonApiResponseDto responseDto = new CommonApiResponseDto(liveAPIResponseDto);
+                    return new Weather(type, responseDto);
+                } catch (IllegalArgumentException e) {
                     log.warn("errMsg = {}", data);
                     log.warn("retry after 15 seconds {}", uri);
                     TimeUnit.SECONDS.sleep(15);
-                } else {
-                    ObjectMapper mapper = new ObjectMapper();
-                    // 확장 병목 구문
-                    LiveAPIResponseDto liveAPIResponseDto = mapper.convertValue(data, LiveAPIResponseDto.class);
-                    CommonApiResponseDto responseDto = new CommonApiResponseDto(liveAPIResponseDto);
-                    return new Weather(OpenApiType.LIVE, responseDto);
                 }
             }
 
