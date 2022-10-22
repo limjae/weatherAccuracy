@@ -3,7 +3,7 @@ package com.limjae.weather.service;
 import com.limjae.weather.entity.Live;
 import com.limjae.weather.entity._global.Weather;
 import com.limjae.weather.entity.enums.EntityEnum;
-import com.limjae.weather.openapi.service.LiveApiService;
+import com.limjae.weather.openapi.OpenApi;
 import com.limjae.weather.openapi.type.OpenApiType;
 import com.limjae.weather.repository.LiveRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import java.util.List;
 @Slf4j
 public class LiveService {
     private final LiveRepository liveRepository;
-    private final LiveApiService liveApiService;
+    private final OpenApi openApi;
 
     public EntityEnum getType() {
         return EntityEnum.LIVE;
@@ -35,7 +35,7 @@ public class LiveService {
     @Transactional
     public List<Long> loadAllToDB(OpenApiType type, LocalDateTime localDateTime) {
         List<Long> weatherIds = new ArrayList<>();
-        List<Weather> weathers = liveApiService.loadAllLocation(
+        List<Weather> weathers = openApi.loadAllLocation(
                 type, localDateTime
         );
         log.info("load total {} weathers", weathers.size());

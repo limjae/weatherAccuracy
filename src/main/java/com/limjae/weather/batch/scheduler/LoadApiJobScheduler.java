@@ -41,7 +41,7 @@ public class LoadApiJobScheduler {
 
     // run live + midterm
 //    @Scheduled(cron = "30 * * * * *")
-    @Scheduled(cron = " 0 9 * * *")
+    @Scheduled(cron = "0 0 9 * * *")
     public void runAt9() {
         Map<String, JobParameter> confMap = new HashMap<>();
         confMap.put("time", new JobParameter(System.currentTimeMillis()));

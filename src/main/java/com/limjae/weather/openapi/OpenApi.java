@@ -1,13 +1,11 @@
-package com.limjae.weather.openapi.service;
+package com.limjae.weather.openapi;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.limjae.weather.entity._global.Weather;
 import com.limjae.weather.entity.enums.LocationEnum;
 import com.limjae.weather.openapi.dto.CommonApiResponseDto;
-import com.limjae.weather.openapi.dto.LiveAPIResponseDto;
-import com.limjae.weather.openapi.dto.ShortAPIResponseDto;
+import com.limjae.weather.openapi.parser.OpenApiParser;
+import com.limjae.weather.openapi.parser.OpenApiParserFactory;
 import com.limjae.weather.openapi.time.OpenApiTime;
 import com.limjae.weather.openapi.time.OpenApiTimeFactory;
 import com.limjae.weather.openapi.type.OpenApiType;
@@ -18,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -28,13 +26,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * ## 새로운 종류의 Api를 만들려면 OpenApiType에 타입을 추가하고 다음 인터페이스를 구현해야합니다. ##
+ * @see OpenApiType
+ * @see OpenApiParser
+ * @see OpenApiTime
+ * @see OpenApiUri
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
-public class ShortApiService {
-    private final OpenApiUriFactory uriFactory;
+public class OpenApi {
     private final OpenApiTimeFactory baseTimeFactory;
+    private final OpenApiUriFactory uriFactory;
+    private final OpenApiParserFactory parserFactory;
 
     public Weather load(OpenApiType type, LocalDateTime localDateTime, LocationEnum location) {
         OpenApiTime apiTime = baseTimeFactory.generate(type);
@@ -42,7 +47,7 @@ public class ShortApiService {
         OpenApiParameter openApiParameter = new OpenApiParameter(apiTime, localDateTime, location);
         URI uri = openApiUri.getURI(openApiParameter);
 
-        return connect(uri);
+        return connect(type, uri);
     }
 
     public List<Weather> loadAllLocation(OpenApiType type, LocalDateTime localDateTime) {
@@ -59,38 +64,29 @@ public class ShortApiService {
         return result;
     }
 
-    /**
-     * 확장 병목 지점...
-     *
-     * @param uri
-     * @return
-     */
-    private Weather connect(URI uri) {
+    private Weather connect(OpenApiType type, URI uri) {
         try {
             RestTemplate restTemplate = new RestTemplate();
+            OpenApiParser parser = parserFactory.generate(type);
 
             for (int rounds = 0; rounds < 5; rounds++) {
-                ResponseEntity<String> responseEntity = restTemplate.getForEntity(uri, String.class);
-
-                XmlMapper xmlMapper = new XmlMapper();
-                Map data = xmlMapper.readValue(responseEntity.getBody(), Map.class);
-                log.info("Api data: {}", data);
-
-                if (data.containsKey("cmmMsgHeader")) {
-                    log.warn("errMsg = {}", data);
-                    log.warn("retry after 15 seconds {}", uri);
+                try {
+                    ResponseEntity<String> responseEntity = restTemplate.getForEntity(uri, String.class);
+                    Map<?,?> data = parser.xmlResponseToMap(responseEntity);
+                    CommonApiResponseDto responseDto = parser.mapToResponseDto(data);
+                    return new Weather(type, responseDto);
+                } catch (IllegalArgumentException e) {
+                    log.warn(e.getMessage());
+                    log.warn("something wrong... retry after 15 seconds {}", uri);
                     TimeUnit.SECONDS.sleep(15);
-                } else {
-                    ObjectMapper mapper = new ObjectMapper();
-                    // 확장 병목 구문
-                    ShortAPIResponseDto shortAPIResponseDto = mapper.convertValue(data, ShortAPIResponseDto.class);
-                    CommonApiResponseDto responseDto = new CommonApiResponseDto(shortAPIResponseDto);
-                    return new Weather(OpenApiType.SHORT, responseDto);
+                } catch (RestClientException e){
+                    log.error("API ERROR {}", e.getMessage());
+                    throw e;
                 }
             }
 
         } catch (InterruptedException | JsonProcessingException e) {
-            throw new RuntimeException("Load Fail: {}", e);
+            throw new RuntimeException("Load Fail, : {}", e);
         }
 
         throw new RuntimeException("Load Fail");

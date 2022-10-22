@@ -40,7 +40,9 @@ public class Weather {
     private double windDirection;
     // m/s
     private double windSpeed;
+
     // PTY
+    @Enumerated(EnumType.STRING)
     private RainEnum rainCondition;
 
     public Weather(OpenApiType type, CommonApiResponseDto responseDto) {
