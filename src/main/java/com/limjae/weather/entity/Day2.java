@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Day3 implements PredictionEntity{
+public class Day2 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,7 +18,7 @@ public class Day3 implements PredictionEntity{
     @Embedded
     private Weather weather;
 
-    public Day3(Weather weather){
+    public Day2(Weather weather){
         this.weather = weather;
     }
 }

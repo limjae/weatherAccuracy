@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Live implements PredictionEntity{
+public class Live {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

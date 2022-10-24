@@ -47,19 +47,18 @@ public class CommonApiResponseDto {
         }
     }
 
-    public CommonApiResponseDto(ShortAPIResponseDto shortAPIResponseDto) {
+    public CommonApiResponseDto(ShortAPIResponseDto shortAPIResponseDto, int predictionDay) {
         this.items.setItem(new ArrayList<>());
         List<ShortAPIResponseDto.Info> item = shortAPIResponseDto.getBody().getItems().getItem();
         for (ShortAPIResponseDto.Info info : item) {
-            LocalDateTime forecastDate = LocalDate
-                    .parse(info.getFcstDate(), DateTimeFormatter.ofPattern("yyyyMMdd"))
-                    .atStartOfDay();
-            LocalDateTime baseDate = LocalDate
-                    .parse(info.getBaseDate(), DateTimeFormatter.ofPattern("yyyyMMdd"))
-                    .atStartOfDay();
-            int predictionDay = forecastDate.getDayOfYear() - baseDate.getDayOfYear();
+            LocalDate forecastDate = LocalDate
+                    .parse(info.getFcstDate(), DateTimeFormatter.ofPattern("yyyyMMdd"));
+            LocalDate baseDate = LocalDate
+                    .parse(info.getBaseDate(), DateTimeFormatter.ofPattern("yyyyMMdd"));
 
-            if ((predictionDay == 1 || predictionDay == -365 || predictionDay == -364)
+            int dateDifference = calculateDateDifference(baseDate, forecastDate);
+
+            if (dateDifference == predictionDay
                     && info.getBaseTime().equals(info.getFcstTime())) {
 
                 if (info.getCategory().equals("PCP")) {
@@ -89,8 +88,16 @@ public class CommonApiResponseDto {
             }
         }
 
-        System.out.println("items.getItem() = " + items.getItem());
-        System.out.println("items.getItem().size() = " + items.getItem().size());
+//        System.out.println("items.getItem() = " + items.getItem());
+//        System.out.println("items.getItem().size() = " + items.getItem().size());
+    }
+
+    private int calculateDateDifference(LocalDate base, LocalDate forecast) {
+        if (base.getYear() == forecast.getYear()) {
+            return forecast.getDayOfYear() - base.getDayOfYear();
+        } else {
+            return base.lengthOfYear() + forecast.getDayOfYear() - base.getDayOfYear();
+        }
     }
 
 }

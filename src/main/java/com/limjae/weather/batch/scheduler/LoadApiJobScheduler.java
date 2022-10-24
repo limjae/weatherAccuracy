@@ -22,6 +22,7 @@ public class LoadApiJobScheduler {
     private final JobLauncher jobLauncher;
     private final LoadApiBatchConfiguration batchConfiguration;
 
+    //live + short
 //    @Scheduled(cron = "15 * * * * *")
     @Scheduled(cron = "0 0 6 * * *")
     public void runAt6() {
@@ -32,6 +33,7 @@ public class LoadApiJobScheduler {
 
         try {
             jobLauncher.run(batchConfiguration.liveApiJob(), jobParameters);
+            jobLauncher.run(batchConfiguration.shortApiJob(), jobParameters);
 
         } catch (JobExecutionAlreadyRunningException | JobInstanceAlreadyCompleteException
                  | JobParametersInvalidException | org.springframework.batch.core.repository.JobRestartException e) {
@@ -50,6 +52,7 @@ public class LoadApiJobScheduler {
 
         try {
             jobLauncher.run(batchConfiguration.liveApiJob(), jobParameters);
+            jobLauncher.run(batchConfiguration.shortApiJob(), jobParameters);
 
         } catch (JobExecutionAlreadyRunningException | JobInstanceAlreadyCompleteException
                  | JobParametersInvalidException | org.springframework.batch.core.repository.JobRestartException e) {
@@ -67,6 +70,7 @@ public class LoadApiJobScheduler {
 
         try {
             jobLauncher.run(batchConfiguration.liveApiJob(), jobParameters);
+            jobLauncher.run(batchConfiguration.shortApiJob(), jobParameters);
 
         } catch (JobExecutionAlreadyRunningException | JobInstanceAlreadyCompleteException
                  | JobParametersInvalidException | org.springframework.batch.core.repository.JobRestartException e) {
@@ -85,6 +89,7 @@ public class LoadApiJobScheduler {
 
         try {
             jobLauncher.run(batchConfiguration.liveApiJob(), jobParameters);
+            jobLauncher.run(batchConfiguration.shortApiJob(), jobParameters);
 
         } catch (JobExecutionAlreadyRunningException | JobInstanceAlreadyCompleteException
                  | JobParametersInvalidException | org.springframework.batch.core.repository.JobRestartException e) {

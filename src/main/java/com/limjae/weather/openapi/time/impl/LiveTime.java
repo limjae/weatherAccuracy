@@ -21,23 +21,23 @@ public class LiveTime implements OpenApiTime {
 
     @Override
     public String getBaseHourAndMinute(LocalDateTime localDateTime) {
-        String nearestHour = getNearestHour(localDateTime);
+        String nearestHour = getBaseHour(localDateTime);
         String minute = "00";
         return nearestHour + minute;
     }
 
     /**
-     * LIVE, SHORT = 0500(6~8) 0800(6~7) 1700 2000
+     * LIVE = 5,6,8, 17,18,20
      */
-    private String getNearestHour(LocalDateTime dateTime) {
-        if (dateTime.getHour() > 5 && dateTime.getHour() < 9) {
-            return "05";
-        } else if (dateTime.getHour() > 8 && dateTime.getHour() < 18) {
-            return "08";
-        } else if (dateTime.getHour() > 17 && dateTime.getHour() < 21) {
-            return "17";
-        } else {
-            return "20";
-        }
+    private String getBaseHour(LocalDateTime dateTime) {
+        return switch (dateTime.getHour()) {
+            case 6 -> "05";
+            case 7, 8 -> "06";
+            case 9, 10, 11, 12, 13, 14, 15, 16, 17 -> "08";
+            case 18 -> "17";
+            case 19, 20 -> "18";
+            case 21, 22, 23 -> "20";
+            default -> throw new IllegalArgumentException("잘못된 시간입니다. :" + dateTime);
+        };
     }
 }

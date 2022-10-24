@@ -17,4 +17,4 @@ spring:
 
 logging:
   level:
-    com.limjae.weather: debug
+    com.limjae.weather: info

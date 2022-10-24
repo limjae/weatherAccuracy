@@ -36,7 +36,7 @@ public class Day1Service {
     public List<Long> loadAllToDB(OpenApiType type, LocalDateTime localDateTime) {
         List<Long> weatherIds = new ArrayList<>();
         List<Weather> weathers = openApi.loadAllLocation(
-                type, localDateTime
+                type, localDateTime, 1
         );
         log.info("load total {} weathers", weathers.size());
         weathers.forEach(weather -> {

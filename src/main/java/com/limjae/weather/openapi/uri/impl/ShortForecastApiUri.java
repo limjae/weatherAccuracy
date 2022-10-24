@@ -45,7 +45,7 @@ public class ShortForecastApiUri implements OpenApiUri {
     public URI getURI(OpenApiParameter openApiParameter) {
         try {
             String url = generateUrl(openApiParameter);
-            log.info("Create URL = {}", url);
+            log.debug("Create URL = {}", url);
             return new URI(url);
         } catch (URISyntaxException e) {
             System.out.println("e.getMessage() = " + e.getMessage());

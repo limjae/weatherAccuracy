@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class PredictionError implements PredictionEntity{
+public class PredictionError {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

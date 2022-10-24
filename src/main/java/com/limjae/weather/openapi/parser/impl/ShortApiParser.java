@@ -32,7 +32,7 @@ public class ShortApiParser implements OpenApiParser {
     }
 
     @Override
-    public CommonApiResponseDto mapToResponseDto(Map<?, ?> data) throws IllegalArgumentException {
+    public CommonApiResponseDto mapToResponseDto(Map<?, ?> data, int predictionDay) throws IllegalArgumentException {
         ObjectMapper mapper = new ObjectMapper();
         ShortAPIResponseDto shortAPIResponseDto = mapper.convertValue(data, ShortAPIResponseDto.class);
 
@@ -42,7 +42,7 @@ public class ShortApiParser implements OpenApiParser {
             throw new IllegalArgumentException("API 오류 입니다: " + data.toString());
         }
 
-        return new CommonApiResponseDto(shortAPIResponseDto);
+        return new CommonApiResponseDto(shortAPIResponseDto, predictionDay);
 
     }
 }

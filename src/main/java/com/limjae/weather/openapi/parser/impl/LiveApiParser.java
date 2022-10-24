@@ -32,7 +32,7 @@ public class LiveApiParser implements OpenApiParser {
     }
 
     @Override
-    public CommonApiResponseDto mapToResponseDto(Map<?, ?> data) throws IllegalArgumentException {
+    public CommonApiResponseDto mapToResponseDto(Map<?, ?> data, int predictionDay) throws IllegalArgumentException {
         ObjectMapper mapper = new ObjectMapper();
         LiveAPIResponseDto liveAPIResponseDto = mapper.convertValue(data, LiveAPIResponseDto.class);
 

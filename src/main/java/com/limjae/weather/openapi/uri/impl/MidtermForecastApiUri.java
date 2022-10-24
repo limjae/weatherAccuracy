@@ -42,7 +42,7 @@ public class MidtermForecastApiUri implements OpenApiUri {
     public URI getURI(OpenApiParameter openApiParameter) {
         try {
             String url = generateUrl(openApiParameter);
-            log.info("Create URL = {}", url);
+            log.debug("Create URL = {}", url);
             return new URI(url);
         } catch (URISyntaxException e) {
             System.out.println("e.getMessage() = " + e.getMessage());
@@ -56,11 +56,10 @@ public class MidtermForecastApiUri implements OpenApiUri {
         }
         return baseUrl +
                 "?" + URLEncoder.encode("ServiceKey", StandardCharsets.UTF_8) + "=" + encodingKey +
-                "&" + URLEncoder.encode("nx", StandardCharsets.UTF_8) + "=" + URLEncoder.encode(openApiParameter.getLocation().getX(), StandardCharsets.UTF_8) + //경도
-                "&" + URLEncoder.encode("ny", StandardCharsets.UTF_8) + "=" + URLEncoder.encode(openApiParameter.getLocation().getY(), StandardCharsets.UTF_8) + //위도
-                "&" + URLEncoder.encode("base_date", StandardCharsets.UTF_8) + "=" + URLEncoder.encode(openApiParameter.getDate(), StandardCharsets.UTF_8) + /* 조회하고싶은 날짜*/
-                "&" + URLEncoder.encode("base_time", StandardCharsets.UTF_8) + "=" + URLEncoder.encode(openApiParameter.getTime(), StandardCharsets.UTF_8) + /* 조회하고싶은 시간 AM 02시부터 3시간 단위 */
-                "&" + URLEncoder.encode("dataType", StandardCharsets.UTF_8) + "=" + URLEncoder.encode("XML", StandardCharsets.UTF_8);    /* 타입 */
+                "&" + URLEncoder.encode("regId", StandardCharsets.UTF_8) + "=" + URLEncoder.encode(openApiParameter.getLocation().getX(), StandardCharsets.UTF_8) + //경도
+                "&" + URLEncoder.encode("numOfRows", StandardCharsets.UTF_8) + "=" + URLEncoder.encode("1000", StandardCharsets.UTF_8) + //출력물수
+                "&" + URLEncoder.encode("tmFc", StandardCharsets.UTF_8) + "=" + URLEncoder.encode(openApiParameter.getDate() + openApiParameter.getTime(), StandardCharsets.UTF_8) + /* 기준 일자 */
+                "&" + URLEncoder.encode("dataType", StandardCharsets.UTF_8) + "=" + URLEncoder.encode("XML", StandardCharsets.UTF_8);   /* 출력 타입 */
     }
 
     private boolean isInvalidType(OpenApiParameter openApiParameter) {

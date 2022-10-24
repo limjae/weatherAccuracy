@@ -10,5 +10,5 @@ import java.util.Map;
 public interface OpenApiParser {
     public OpenApiType getType();
     public Map<?, ?> xmlResponseToMap(ResponseEntity<String> responseEntity) throws JsonProcessingException;
-    public CommonApiResponseDto mapToResponseDto(Map<?, ?> data) throws IllegalArgumentException;
+    public CommonApiResponseDto mapToResponseDto(Map<?, ?> data, int predictionDay) throws IllegalArgumentException;
 }

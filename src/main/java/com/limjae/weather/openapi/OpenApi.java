@@ -41,16 +41,16 @@ public class OpenApi {
     private final OpenApiUriFactory uriFactory;
     private final OpenApiParserFactory parserFactory;
 
-    public Weather load(OpenApiType type, LocalDateTime localDateTime, LocationEnum location) {
+    public Weather load(OpenApiType type, LocalDateTime localDateTime, int predictionDay, LocationEnum location) {
         OpenApiTime apiTime = baseTimeFactory.generate(type);
         OpenApiUri openApiUri = uriFactory.generate(type);
         OpenApiParameter openApiParameter = new OpenApiParameter(apiTime, localDateTime, location);
         URI uri = openApiUri.getURI(openApiParameter);
 
-        return connect(type, uri);
+        return connect(type, uri, predictionDay);
     }
 
-    public List<Weather> loadAllLocation(OpenApiType type, LocalDateTime localDateTime) {
+    public List<Weather> loadAllLocation(OpenApiType type, LocalDateTime localDateTime, int predictionDay) {
         List<Weather> result = new ArrayList<>();
 
         for (LocationEnum location : LocationEnum.values()) {
@@ -59,12 +59,12 @@ public class OpenApi {
             }
 
             result.add(
-                    load(type, localDateTime, location));
+                    load(type, localDateTime, predictionDay, location));
         }
         return result;
     }
 
-    private Weather connect(OpenApiType type, URI uri) {
+    private Weather connect(OpenApiType type, URI uri, int predictionDay) {
         try {
             RestTemplate restTemplate = new RestTemplate();
             OpenApiParser parser = parserFactory.generate(type);
@@ -73,7 +73,7 @@ public class OpenApi {
                 try {
                     ResponseEntity<String> responseEntity = restTemplate.getForEntity(uri, String.class);
                     Map<?,?> data = parser.xmlResponseToMap(responseEntity);
-                    CommonApiResponseDto responseDto = parser.mapToResponseDto(data);
+                    CommonApiResponseDto responseDto = parser.mapToResponseDto(data, predictionDay);
                     return new Weather(type, responseDto);
                 } catch (IllegalArgumentException e) {
                     log.warn(e.getMessage());

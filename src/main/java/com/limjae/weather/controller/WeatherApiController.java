@@ -23,7 +23,7 @@ public class WeatherApiController {
 
     @RequestMapping("/forecast/live")
     public String liveForecast() throws JsonProcessingException, InterruptedException {
-        List<Weather> weathers = openApi.loadAllLocation(OpenApiType.LIVE, LocalDateTime.now().withHour(6));
+        List<Weather> weathers = openApi.loadAllLocation(OpenApiType.LIVE, LocalDateTime.now().withHour(6), 0);
         weathers.forEach(weather -> log.info("Weather {}", weather));
 
         return "Hello";
@@ -32,7 +32,7 @@ public class WeatherApiController {
     @RequestMapping("/forecast/short")
     public String shortForecast() throws JsonProcessingException, InterruptedException {
 
-        List<Weather> weathers = openApi.loadAllLocation(OpenApiType.SHORT, LocalDateTime.now().withHour(6));
+        List<Weather> weathers = openApi.loadAllLocation(OpenApiType.SHORT, LocalDateTime.now().withHour(6), 1);
         weathers.forEach(weather -> log.info("Weather {}", weather));
         return "Hello";
     }

@@ -22,7 +22,7 @@ public class MidtermTime implements OpenApiTime {
 
     @Override
     public String getBaseHourAndMinute(LocalDateTime localDateTime) {
-        String nearestHour = getNearestHour(localDateTime);
+        String nearestHour = getBaseHour(localDateTime);
         String minute = "00";
         return nearestHour + minute;
     }
@@ -30,8 +30,8 @@ public class MidtermTime implements OpenApiTime {
     /**
      * MIDTERM = 0600, 1800
      */
-    private String getNearestHour(LocalDateTime dateTime) {
-        if (dateTime.getHour() < 19) {
+    private String getBaseHour(LocalDateTime dateTime) {
+        if (dateTime.getHour() > 6 && dateTime.getHour() < 19) {
             return "06";
         } else {
             return "18";
