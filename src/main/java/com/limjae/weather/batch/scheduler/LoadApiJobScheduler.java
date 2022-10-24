@@ -31,14 +31,7 @@ public class LoadApiJobScheduler {
         confMap.put("executeHour", new JobParameter("6"));
         JobParameters jobParameters = new JobParameters(confMap);
 
-        try {
-            jobLauncher.run(batchConfiguration.liveApiJob(), jobParameters);
-            jobLauncher.run(batchConfiguration.shortApiJob(), jobParameters);
-
-        } catch (JobExecutionAlreadyRunningException | JobInstanceAlreadyCompleteException
-                 | JobParametersInvalidException | org.springframework.batch.core.repository.JobRestartException e) {
-            log.error(e.getMessage());
-        }
+        run(jobParameters);
     }
 
     // run live + midterm
@@ -50,14 +43,7 @@ public class LoadApiJobScheduler {
         confMap.put("executeHour", new JobParameter("9"));
         JobParameters jobParameters = new JobParameters(confMap);
 
-        try {
-            jobLauncher.run(batchConfiguration.liveApiJob(), jobParameters);
-            jobLauncher.run(batchConfiguration.shortApiJob(), jobParameters);
-
-        } catch (JobExecutionAlreadyRunningException | JobInstanceAlreadyCompleteException
-                 | JobParametersInvalidException | org.springframework.batch.core.repository.JobRestartException e) {
-            log.error(e.getMessage());
-        }
+        run(jobParameters);
     }
 
 //    @Scheduled(cron = "45 * * * * *")
@@ -68,14 +54,7 @@ public class LoadApiJobScheduler {
         confMap.put("executeHour", new JobParameter("18"));
         JobParameters jobParameters = new JobParameters(confMap);
 
-        try {
-            jobLauncher.run(batchConfiguration.liveApiJob(), jobParameters);
-            jobLauncher.run(batchConfiguration.shortApiJob(), jobParameters);
-
-        } catch (JobExecutionAlreadyRunningException | JobInstanceAlreadyCompleteException
-                 | JobParametersInvalidException | org.springframework.batch.core.repository.JobRestartException e) {
-            log.error(e.getMessage());
-        }
+        run(jobParameters);
     }
 
     // run live + midterm
@@ -87,6 +66,10 @@ public class LoadApiJobScheduler {
         confMap.put("executeHour", new JobParameter("21"));
         JobParameters jobParameters = new JobParameters(confMap);
 
+        run(jobParameters);
+    }
+
+    public void run(JobParameters jobParameters){
         try {
             jobLauncher.run(batchConfiguration.liveApiJob(), jobParameters);
             jobLauncher.run(batchConfiguration.shortApiJob(), jobParameters);
