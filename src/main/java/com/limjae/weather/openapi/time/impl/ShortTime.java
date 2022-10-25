@@ -32,7 +32,8 @@ public class ShortTime implements OpenApiTime {
     private String getBaseHour(LocalDateTime dateTime) {
         return switch (dateTime.getHour()) {
             case 6, 7, 8 -> "05";
-            case 9, 10, 11, 12, 13, 14, 15, 16, 17 -> "08";
+            case 9, 10, 11 -> "08";
+            case 12, 13, 14, 15, 16, 17 -> "11";
             case 18, 19, 20 -> "17";
             case 21, 22, 23 -> "20";
             default -> throw new IllegalArgumentException("잘못된 시간입니다. :" + dateTime);

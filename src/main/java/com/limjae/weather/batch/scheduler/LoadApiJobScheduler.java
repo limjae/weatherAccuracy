@@ -46,6 +46,16 @@ public class LoadApiJobScheduler {
         run(jobParameters);
     }
 
+    @Scheduled(cron = "0 0 12 * * *")
+    public void runAt12() {
+        Map<String, JobParameter> confMap = new HashMap<>();
+        confMap.put("time", new JobParameter(System.currentTimeMillis()));
+        confMap.put("executeHour", new JobParameter("12"));
+        JobParameters jobParameters = new JobParameters(confMap);
+
+        run(jobParameters);
+    }
+
 //    @Scheduled(cron = "45 * * * * *")
     @Scheduled(cron = "0 0 18 * * *")
     public void runAt18() {
