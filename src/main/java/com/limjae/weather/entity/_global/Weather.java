@@ -43,7 +43,7 @@ public class Weather {
 
     // PTY
     @Enumerated(EnumType.STRING)
-    private RainEnum rainCondition;
+    private RainEnum rainCondition = RainEnum.ERROR;
 
     public Weather(OpenApiType type, CommonApiResponseDto responseDto) {
         this.type = type;

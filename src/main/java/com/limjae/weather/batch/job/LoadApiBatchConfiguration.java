@@ -1,6 +1,7 @@
 package com.limjae.weather.batch.job;
 
 import com.limjae.weather.batch.tasklet.LoadAfter1DayWithShortApiTasklet;
+import com.limjae.weather.batch.tasklet.LoadAfter2DayWithShortApiTasklet;
 import com.limjae.weather.batch.tasklet.LoadLiveApiTasklet;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,7 @@ public class LoadApiBatchConfiguration {
 
     private final LoadLiveApiTasklet loadLiveApiTasklet;
     private final LoadAfter1DayWithShortApiTasklet loadAfter1DayWithShortApiTasklet;
-    private final LoadAfter1DayWithShortApiTasklet loadAfter2DayWithShortApiTasklet;
+    private final LoadAfter2DayWithShortApiTasklet loadAfter2DayWithShortApiTasklet;
 
     @Bean
     public Job liveApiJob() {
@@ -34,7 +35,8 @@ public class LoadApiBatchConfiguration {
     @Bean
     public Job shortApiJob() {
         return jobBuilderFactory.get("ShortApiLoadBatch")
-                .start(shortApiStep())
+                .start(day1ShortApiStep())
+                .next(day2ShortApiStep())
                 .build();
     }
 
@@ -49,9 +51,16 @@ public class LoadApiBatchConfiguration {
 
     @Bean
     @JobScope
-    public Step shortApiStep() {
+    public Step day1ShortApiStep() {
         return stepBuilderFactory.get("ShortApiStep")
                 .tasklet(loadAfter1DayWithShortApiTasklet)
+                .build();
+    }
+
+    @Bean
+    @JobScope
+    public Step day2ShortApiStep() {
+        return stepBuilderFactory.get("ShortApiStep")
                 .tasklet(loadAfter2DayWithShortApiTasklet)
                 .build();
     }

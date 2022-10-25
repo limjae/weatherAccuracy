@@ -23,8 +23,8 @@ public class LoadApiJobScheduler {
     private final LoadApiBatchConfiguration batchConfiguration;
 
     //live + short
-//    @Scheduled(cron = "15 * * * * *")
-    @Scheduled(cron = "0 0 6 * * *")
+    @Scheduled(cron = "15 * * * * *")
+//    @Scheduled(cron = "0 0 6 * * *")
     public void runAt6() {
         Map<String, JobParameter> confMap = new HashMap<>();
         confMap.put("time", new JobParameter(System.currentTimeMillis()));

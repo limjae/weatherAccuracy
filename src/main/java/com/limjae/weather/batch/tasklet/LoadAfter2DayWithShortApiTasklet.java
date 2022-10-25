@@ -27,7 +27,7 @@ public class LoadAfter2DayWithShortApiTasklet implements Tasklet {
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-        log.info(">>>>> Loading 1 Day After Prediction From Short Forecast Api");
+        log.info(">>>>> Loading 2 Day After Prediction From Short Forecast Api");
         log.info("Parameter executeHour: {}", executeHour);
         LocalDateTime dateTime = LocalDateTime.now().withHour(Integer.parseInt(executeHour));
         day2Service.loadAllToDB(OpenApiType.SHORT, dateTime);
